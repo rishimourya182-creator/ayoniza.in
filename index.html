@@ -143,83 +143,8 @@
         <div class="product-bottom">
           <span class="product-price">₹199</span>
           <div class="product-actions" style="display: flex; gap: 8px; width: 100%;">
-            <button class="add-cart-btn" data-id="silver-star-charm-kamarbandh" data-name="Silver Star Charm Kamarbandh" data-price="199" data-image="assets/kamarbandh-2.png" style="flex: 1;">Add to Cart</button>
+            <button class="add-cart-btn" data-id="silver-star-charm-kamarbandh" data-name="Silver Star Charm Kamarbandh" data-price="199" data-image="assets/silver-star-charm-kamarbandh" style="flex: 1;">Add to Cart</button>
             <button class="buy-now-btn" data-id="silver-star-charm-kamarbandh" data-name="Silver Star Charm Kamarbandh" data-price="199" data-image="assets/kamarbandh-2.png" style="flex: 1; background: transparent; color: var(--dark-gold); border: 1px solid var(--dark-gold); cursor: pointer; font-size: 11px; text-transform: uppercase;">Buy Now</button>
-          </div>
-        </div>
-      </div>
-    </article>
-  </div>
-    <article class="product-card" data-category="earrings">
-      <div class="product-image"><img src="assets/earring-2.jpg" alt="Pink Tulip Bloom Earrings"></div>
-      <div class="product-info">
-        <p class="product-category">EARRINGS</p>
-        <h3>Pink Tulip Bloom Earrings</h3>
-        <p class="product-description">Beautiful floral earrings featuring soft pink petals and green leaf accents.</p>
-        <div class="product-bottom">
-          <span class="product-price">₹199</span>
-          <div class="product-actions">
-            <button class="add-cart-btn" data-id="pink-tulip-bloom-earrings" data-name="Pink Tulip Bloom Earrings" data-price="199" data-image="assets/earring-2.jpg">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <article class="product-card" data-category="earrings">
-      <div class="product-image"><img src="assets/earring-3.jpg" alt="Pearl Bow Crystal Studs"></div>
-      <div class="product-info">
-        <p class="product-category">EARRINGS</p>
-        <h3>Pearl Bow Crystal Studs</h3>
-        <p class="product-description">Classic pearl drop earrings with a delicate sparkling bow design.</p>
-        <div class="product-bottom">
-          <span class="product-price">₹199</span>
-          <div class="product-actions">
-            <button class="add-cart-btn" data-id="pearl-bow-crystal-studs" data-name="Pearl Bow Crystal Studs" data-price="199" data-image="assets/earring-3.jpg">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <article class="product-card" data-category="earrings">
-      <div class="product-image"><img src="assets/earring-4.jpg" alt="Golden Leaf Pearl Earrings"></div>
-      <div class="product-info">
-        <p class="product-category">EARRINGS</p>
-        <h3>Golden Leaf Pearl Earrings</h3>
-        <p class="product-description">Elegant gold-toned leaf earrings finished with sparkling details and pearls.</p>
-        <div class="product-bottom">
-          <span class="product-price">₹199</span>
-          <div class="product-actions">
-            <button class="add-cart-btn" data-id="golden-leaf-pearl-earrings" data-name="Golden Leaf Pearl Earrings" data-price="199" data-image="assets/earring-4.jpg">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <article class="product-card" data-category="kamarbandh">
-      <div class="product-image"><img src="assets/kamarbandh-1.png" alt="Golden Star Charm Kamarbandh"></div>
-      <div class="product-info">
-        <p class="product-category">KAMARBANDH</p>
-        <h3>Golden Star Charm Kamarbandh</h3>
-        <p class="product-description">Elegant layered kamarbandh with delicate star-shaped charms.</p>
-        <div class="product-bottom">
-          <span class="product-price">₹199</span>
-          <div class="product-actions">
-            <button class="add-cart-btn" data-id="golden-star-charm-kamarbandh" data-name="Golden Star Charm Kamarbandh" data-price="199" data-image="assets/kamarbandh-1.png">Add to Cart</button>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <article class="product-card" data-category="kamarbandh">
-      <div class="product-image"><img src="assets/kamarbandh-2.png" alt="Silver Star Charm Kamarbandh"></div>
-      <div class="product-info">
-        <p class="product-category">KAMARBANDH</p>
-        <h3>Silver Star Charm Kamarbandh</h3>
-        <p class="product-description">Delicate silver-tone kamarbandh featuring tiny star charms.</p>
-        <div class="product-bottom">
-          <span class="product-price">₹199</span>
-          <div class="product-actions">
-            <button class="add-cart-btn" data-id="silver-star-charm-kamarbandh" data-name="Silver Star Charm Kamarbandh" data-price="199" data-image="assets/kamarbandh-2.png">Add to Cart</button>
           </div>
         </div>
       </div>
@@ -262,31 +187,32 @@
   <div class="cart-items" id="cartItems"></div>
 
   <div class="cart-footer">
-  <div class="cart-total-row">
-    <span>Subtotal</span>
-    <strong id="cartTotal">₹0</strong>
-  </div>
+    <div class="cart-total-row">
+      <span>Subtotal</span>
+      <strong id="cartTotal">₹0</strong>
+    </div>
 
-  <!-- Customer Details Form -->
-  <div class="checkout-form" style="margin: 15px 0; display: flex; flex-direction: column; gap: 8px;">
-    <p style="font-size: 11px; font-weight: 600; color: var(--dark-gold); text-transform: uppercase; letter-spacing: 1px;">Delivery Details</p>
-    <input type="text" id="custName" placeholder="Full Name *" required style="padding: 8px; border: 1px solid var(--border); font-size: 12px; width: 100%;">
-    <input type="tel" id="custPhone" placeholder="Phone Number *" required style="padding: 8px; border: 1px solid var(--border); font-size: 12px; width: 100%;">
-    <textarea id="custAddress" placeholder="Full Address with Pincode *" rows="2" required style="padding: 8px; border: 1px solid var(--border); font-size: 12px; width: 100%; font-family: inherit;"></textarea>
-  </div>
+    <!-- Customer Details Form -->
+    <div class="checkout-form" style="margin: 15px 0; display: flex; flex-direction: column; gap: 8px;">
+      <p style="font-size: 11px; font-weight: 600; color: var(--dark-gold); text-transform: uppercase; letter-spacing: 1px;">Delivery Details</p>
+      <input type="text" id="custName" placeholder="Full Name *" required style="padding: 8px; border: 1px solid var(--border); font-size: 12px; width: 100%;">
+      <input type="tel" id="custPhone" placeholder="Phone Number *" required style="padding: 8px; border: 1px solid var(--border); font-size: 12px; width: 100%;">
+      <textarea id="custAddress" placeholder="Full Address with Pincode *" rows="2" required style="padding: 8px; border: 1px solid var(--border); font-size: 12px; width: 100%; font-family: inherit;"></textarea>
+    </div>
 
-  <!-- UPI Payment Section -->
-  <div class="upi-payment-box" style="margin-bottom: 15px; padding: 12px; border: 1px solid var(--border); background: #fff; text-align: center;">
-    <p style="font-size: 12px; font-weight: 600; color: var(--dark-gold); margin-bottom: 5px;">Pay via UPI</p>
-    <p style="font-size: 11px; color: var(--gray); margin-bottom: 8px;">UPI ID: <strong>9589790094-2@ybl</strong></p>
-    <a id="upiPayBtn" href="#" class="btn primary" style="display: block; font-size: 10px; padding: 8px; text-align: center;">Pay via Any UPI App</a>
-  </div>
+    <!-- UPI Payment Section -->
+    <div class="upi-payment-box" style="margin-bottom: 15px; padding: 12px; border: 1px solid var(--border); background: #fff; text-align: center;">
+      <p style="font-size: 12px; font-weight: 600; color: var(--dark-gold); margin-bottom: 5px;">Pay via UPI</p>
+      <p style="font-size: 11px; color: var(--gray); margin-bottom: 8px;">UPI ID: <strong>9589790094-2@ybl</strong></p>
+      <a id="upiPayBtn" href="#" class="btn primary" style="display: block; font-size: 10px; padding: 8px; text-align: center;">Pay via Any UPI App</a>
+    </div>
 
-  <p class="cart-note">Payment karne ke baad WhatsApp Order button par click karein.</p>
-  <button class="checkout-btn" id="checkoutBtn" type="button">Place Order on WhatsApp</button>
-  <button class="continue-btn" id="continueShoppingBtn" type="button">Continue Shopping</button>
-</div>
-  
+    <p class="cart-note">Payment karne ke baad WhatsApp Order button par click karein.</p>
+    <button class="checkout-btn" id="checkoutBtn" type="button">Place Order on WhatsApp</button>
+    <button class="continue-btn" id="continueShoppingBtn" type="button">Continue Shopping</button>
+  </div>
+</aside>
+
 <script src="script.js"></script>
 </body>
 </html>
