@@ -1,224 +1,147 @@
-const CART_KEY = "ayonizaCart";
+let cart = [];
 
-let cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+// Elements
+const cartDrawer = document.getElementById('cartDrawer');
+const cartOverlay = document.getElementById('cartOverlay');
+const openCartBtn = document.getElementById('openCartBtn');
+const closeCartBtn = document.getElementById('closeCartBtn');
+const continueShoppingBtn = document.getElementById('continueShoppingBtn');
+const cartItemsContainer = document.getElementById('cartItems');
+const cartTotalElement = document.getElementById('cartTotal');
+const cartCountElement = document.getElementById('cartCount');
+const upiPayBtn = document.getElementById('upiPayBtn');
+const checkoutBtn = document.getElementById('checkoutBtn');
 
-const cartDrawer = document.getElementById("cartDrawer");
-const cartOverlay = document.getElementById("cartOverlay");
-const cartItems = document.getElementById("cartItems");
-const cartCount = document.getElementById("cartCount");
-const cartTotal = document.getElementById("cartTotal");
-
-function saveCart() {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-}
-
-function money(value) {
-  return "₹" + Number(value).toLocaleString("en-IN");
-}
-
-function totalItems() {
-  return cart.reduce((sum, item) => sum + item.quantity, 0);
-}
-
-function totalPrice() {
-  return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-}
-
-function renderCart() {
-  cartCount.textContent = totalItems();
-  const total = totalPrice();
-  cartTotal.textContent = money(total);
-
-  // UPI Deep Link Generator
-  const upiPayBtn = document.getElementById("upiPayBtn");
-  if (upiPayBtn) {
-    const upiID = "9589790094-2@ybl";
-    const payeeName = "AYONIZA";
-    const upiUrl = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(payeeName)}&am=${total}&cu=INR`;
-    upiPayBtn.setAttribute("href", upiUrl);
-  }
-
-  if (cart.length === 0) {
-    cartItems.innerHTML = `
-      <div class="empty-cart">
-        <div class="empty-cart-icon">🛍️</div>
-        <h4>Your cart is empty</h4>
-        <p>Add your favourite AYONIZA pieces to your cart.</p>
-      </div>
-    `;
-    return;
-  }
-
-  cartItems.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <img src="${item.image}" alt="${item.name}">
-      <div>
-        <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-price">${money(item.price)}</div>
-        <div class="quantity-controls">
-          <button class="quantity-btn" type="button" data-minus="${item.id}">−</button>
-          <span class="quantity-value">${item.quantity}</span>
-          <button class="quantity-btn" type="button" data-plus="${item.id}">+</button>
-        </div>
-      </div>
-      <button class="remove-item" type="button" data-remove="${item.id}">Remove</button>
-    </div>
-  `).join("");
-
-  cartItems.querySelectorAll("[data-minus]").forEach(btn => {
-    btn.addEventListener("click", () => changeQty(btn.dataset.minus, -1));
-  });
-
-  cartItems.querySelectorAll("[data-plus]").forEach(btn => {
-    btn.addEventListener("click", () => changeQty(btn.dataset.plus, 1));
-  });
-
-  cartItems.querySelectorAll("[data-remove]").forEach(btn => {
-    btn.addEventListener("click", () => removeItem(btn.dataset.remove));
-  });
-}
-function addToCart(product) {
-  const existing = cart.find(item => item.id === product.id);
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    cart.push({...product, quantity: 1});
-  }
-  saveCart();
-  renderCart();
-  openCart();
-}
-
-function changeQty(id, amount) {
-  const item = cart.find(item => item.id === id);
-  if (!item) return;
-  item.quantity += amount;
-  if (item.quantity <= 0) {
-    cart = cart.filter(item => item.id !== id);
-  }
-  saveCart();
-  renderCart();
-}
-
-function removeItem(id) {
-  cart = cart.filter(item => item.id !== id);
-  saveCart();
-  renderCart();
-}
-
+// Open / Close Cart
 function openCart() {
-  cartDrawer.classList.add("open");
-  cartOverlay.classList.add("show");
-  document.body.classList.add("cart-open");
+  cartDrawer.classList.add('active');
+  cartOverlay.classList.add('active');
 }
 
 function closeCart() {
-  cartDrawer.classList.remove("open");
-  cartOverlay.classList.remove("show");
-  document.body.classList.remove("cart-open");
+  cartDrawer.classList.remove('active');
+  cartOverlay.classList.remove('active');
 }
 
-document.querySelectorAll(".add-cart-btn").forEach(button => {
-  button.addEventListener("click", () => {
-    addToCart({
-      id: button.dataset.id,
-      name: button.dataset.name,
-      price: Number(button.dataset.price),
-      image: button.dataset.image
-    });
-  });
-});
+if (openCartBtn) openCartBtn.addEventListener('click', openCart);
+if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
+if (continueShoppingBtn) continueShoppingBtn.addEventListener('click', closeCart);
+if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
 
-document.querySelectorAll(".category-btn").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active"));
-    button.classList.add("active");
+// Update Cart UI & Payment Links
+function updateCartUI() {
+  cartItemsContainer.innerHTML = '';
+  let total = 0;
+  let itemCount = 0;
 
-    const category = button.dataset.category;
-
-    document.querySelectorAll(".product-card").forEach(card => {
-      card.style.display =
-        category === "all" || card.dataset.category === category ? "" : "none";
-    });
-  });
-});
-
-document.getElementById("openCartBtn").addEventListener("click", openCart);
-document.getElementById("closeCartBtn").addEventListener("click", closeCart);
-document.getElementById("continueShoppingBtn").addEventListener("click", closeCart);
-cartOverlay.addEventListener("click", closeCart);
-
-document.getElementById("checkoutBtn").addEventListener("click", () => {
   if (cart.length === 0) {
-    alert("Your cart is empty.");
-    return;
+    cartItemsContainer.innerHTML = '<p style="text-align: center; color: var(--gray); font-size: 13px; margin: 20px 0;">Your cart is empty.</p>';
+  } else {
+    cart.forEach((item, index) => {
+      const itemTotal = item.price * item.quantity;
+      total += itemTotal;
+      itemCount += item.quantity;
+
+      const itemElement = document.createElement('div');
+      itemElement.className = 'cart-item';
+      itemElement.style.cssText = 'display: flex; gap: 10px; margin-bottom: 15px; align-items: center;';
+      itemElement.innerHTML = `
+        <img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover;">
+        <div style="flex: 1;">
+          <h4 style="font-size: 12px; margin: 0;">${item.name}</h4>
+          <p style="font-size: 11px; color: var(--gray); margin: 2px 0;">₹${item.price} x ${item.quantity}</p>
+        </div>
+        <button onclick="removeItem(${index})" style="background: none; border: none; color: red; cursor: pointer; font-size: 14px;">×</button>
+      `;
+      cartItemsContainer.appendChild(itemElement);
+    });
   }
 
-  const lines = cart.map((item, i) =>
-    `${i + 1}. ${item.name} x ${item.quantity} = ${money(item.price * item.quantity)}`
-  );
+  cartTotalElement.innerText = `₹${total}`;
+  cartCountElement.innerText = itemCount;
 
-  const message =
-    `Hello AYONIZA,%0A%0AI would like to place an order:%0A%0A` +
-    `${lines.join("%0A")}%0A%0A` +
-    `Total: ${money(totalPrice())}%0A%0APlease share the next steps for delivery.`;
+  // FIX: Clean UPI Link (Resolves "This request type is not supported" error)
+  const upiID = "9589790094-2@ybl";
+  const payeeName = "AYONIZA";
+  
+  if (total > 0) {
+    const upiUrl = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(payeeName)}&am=${total}&cu=INR`;
+    upiPayBtn.setAttribute('href', upiUrl);
+  } else {
+    upiPayBtn.setAttribute('href', '#');
+  }
+}
 
-  window.open(`https://wa.me/919203703177?text=${message}`, "_blank");
-});
+// Remove Item
+window.removeItem = function(index) {
+  cart.splice(index, 1);
+  updateCartUI();
+};
 
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") closeCart();
-});
+// Add to Cart Buttons
+document.querySelectorAll('.add-cart-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const id = button.getAttribute('data-id');
+    const name = button.getAttribute('data-name');
+    const price = parseInt(button.getAttribute('data-price'));
+    const image = button.getAttribute('data-image');
 
-renderCart();
+    const existingItem = cart.find(item => item.id === id);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ id, name, price, image, quantity: 1 });
+    }
 
-// Buy Now Button Click Handling
-document.querySelectorAll(".buy-now-btn").forEach(button => {
-  button.addEventListener("click", () => {
-    cart = [{
-      id: button.dataset.id,
-      name: button.dataset.name,
-      price: Number(button.dataset.price),
-      image: button.dataset.image,
-      quantity: 1
-    }];
-    saveCart();
-    renderCart();
+    updateCartUI();
     openCart();
   });
 });
 
-// WhatsApp Checkout with Customer Details
-document.getElementById("checkoutBtn").addEventListener("click", () => {
-  if (cart.length === 0) {
-    alert("Your cart is empty.");
-    return;
-  }
+// Buy Now Buttons
+document.querySelectorAll('.buy-now-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const id = button.getAttribute('data-id');
+    const name = button.getAttribute('data-name');
+    const price = parseInt(button.getAttribute('data-price'));
+    const image = button.getAttribute('data-image');
 
-  const name = document.getElementById("custName").value.trim();
-  const phone = document.getElementById("custPhone").value.trim();
-  const address = document.getElementById("custAddress").value.trim();
-
-  if (!name || !phone || !address) {
-    alert("Kripya Name, Phone Number aur Address sahi se bharein!");
-    return;
-  }
-
-  const lines = cart.map((item, i) =>
-    `${i + 1}. ${item.name} x ${item.quantity} = ${money(item.price * item.quantity)}`
-  );
-
-  const message =
-    `*NEW ORDER - AYONIZA*%0A%0A` +
-    `*Customer Details:*%0A` +
-    `👤 Name: ${encodeURIComponent(name)}%0A` +
-    `📞 Phone: ${encodeURIComponent(phone)}%0A` +
-    `📍 Address: ${encodeURIComponent(address)}%0A%0A` +
-    `*Order Summary:*%0A` +
-    `${lines.join("%0A")}%0A%0A` +
-    `*Total Paid:* ${money(totalPrice())}%0A` +
-    `*Payment Mode:* UPI (9589790094-2@ybl)%0A%0A` +
-    `Maine UPI se payment kar di hai, kripya order confirm karein!`;
-
-  window.open(`https://wa.me/919203703177?text=${message}`, "_blank");
+    cart = [{ id, name, price, image, quantity: 1 }];
+    updateCartUI();
+    openCart();
+  });
 });
+
+// Place Order via WhatsApp
+if (checkoutBtn) {
+  checkoutBtn.addEventListener('click', () => {
+    const name = document.getElementById('custName').value.trim();
+    const phone = document.getElementById('custPhone').value.trim();
+    const address = document.getElementById('custAddress').value.trim();
+
+    if (cart.length === 0) {
+      alert('Your cart is empty!');
+      return;
+    }
+
+    if (!name || !phone || !address) {
+      alert('Please fill all delivery details (Name, Phone, and Address).');
+      return;
+    }
+
+    let itemsText = cart.map(item => `- ${item.name} (x${item.quantity}) = ₹${item.price * item.quantity}`).join('\n');
+    let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    let message = `*New Order - AYONIZA*\n\n` +
+      `*Customer Details:*\n` +
+      `Name: ${name}\n` +
+      `Phone: ${phone}\n` +
+      `Address: ${address}\n\n` +
+      `*Order Details:*\n${itemsText}\n\n` +
+      `*Total Amount:* ₹${total}\n\n` +
+      `I have completed the payment via UPI. Please confirm my order.`;
+
+    let waUrl = `https://wa.me/919203703177?text=${encodeURIComponent(message)}`;
+    window.open(waUrl, '_blank');
+  });
+}
