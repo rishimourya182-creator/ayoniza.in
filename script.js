@@ -26,7 +26,17 @@ function totalPrice() {
 
 function renderCart() {
   cartCount.textContent = totalItems();
-  cartTotal.textContent = money(totalPrice());
+  const total = totalPrice();
+  cartTotal.textContent = money(total);
+
+  // UPI Deep Link Generator
+  const upiPayBtn = document.getElementById("upiPayBtn");
+  if (upiPayBtn) {
+    const upiID = "9589790094-2@ybl";
+    const payeeName = "AYONIZA";
+    const upiUrl = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(payeeName)}&am=${total}&cu=INR`;
+    upiPayBtn.setAttribute("href", upiUrl);
+  }
 
   if (cart.length === 0) {
     cartItems.innerHTML = `
@@ -67,7 +77,6 @@ function renderCart() {
     btn.addEventListener("click", () => removeItem(btn.dataset.remove));
   });
 }
-
 function addToCart(product) {
   const existing = cart.find(item => item.id === product.id);
   if (existing) {
