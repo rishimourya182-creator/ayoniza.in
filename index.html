@@ -181,15 +181,22 @@
   <div class="cart-items" id="cartItems"></div>
 
   <div class="cart-footer">
-    <div class="cart-total-row">
-      <span>Subtotal</span>
-      <strong id="cartTotal">₹0</strong>
-    </div>
-    <p class="cart-note">Checkout will open WhatsApp with your order summary.</p>
-    <button class="checkout-btn" id="checkoutBtn" type="button">Order on WhatsApp</button>
-    <button class="continue-btn" id="continueShoppingBtn" type="button">Continue Shopping</button>
+  <div class="cart-total-row">
+    <span>Subtotal</span>
+    <strong id="cartTotal">₹0</strong>
   </div>
-</aside>
+
+  <!-- UPI Payment Section -->
+  <div class="upi-payment-box" style="margin: 15px 0; padding: 12px; border: 1px solid var(--border); background: #fff; text-align: center;">
+    <p style="font-size: 12px; font-weight: 600; color: var(--dark-gold); margin-bottom: 5px;">Pay via UPI</p>
+    <p style="font-size: 11px; color: var(--gray); margin-bottom: 8px;">UPI ID: <strong>9589790094-2@ybl</strong></p>
+    <a id="upiPayBtn" href="#" class="btn primary" style="display: block; font-size: 10px; padding: 8px; text-align: center;">Pay via Any UPI App</a>
+  </div>
+
+  <p class="cart-note">Payment karne ke baad WhatsApp checkout par click karke screenshot share karein.</p>
+  <button class="checkout-btn" id="checkoutBtn" type="button">Order on WhatsApp</button>
+  <button class="continue-btn" id="continueShoppingBtn" type="button">Continue Shopping</button>
+</div>
 
 <script src="script.js"></script>
 </body>
