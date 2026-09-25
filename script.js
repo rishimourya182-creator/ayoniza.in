@@ -1,6 +1,6 @@
 let cart = [];
 
-// Elements
+// DOM Elements
 const cartDrawer = document.getElementById('cartDrawer');
 const cartOverlay = document.getElementById('cartOverlay');
 const openCartBtn = document.getElementById('openCartBtn');
@@ -12,15 +12,19 @@ const cartCountElement = document.getElementById('cartCount');
 const upiPayBtn = document.getElementById('upiPayBtn');
 const checkoutBtn = document.getElementById('checkoutBtn');
 
-// Open / Close Cart
+// Open / Close Cart Drawer
 function openCart() {
-  cartDrawer.classList.add('active');
-  cartOverlay.classList.add('active');
+  if(cartDrawer && cartOverlay) {
+    cartDrawer.classList.add('active');
+    cartOverlay.classList.add('active');
+  }
 }
 
 function closeCart() {
-  cartDrawer.classList.remove('active');
-  cartOverlay.classList.remove('active');
+  if(cartDrawer && cartOverlay) {
+    cartDrawer.classList.remove('active');
+    cartOverlay.classList.remove('active');
+  }
 }
 
 if (openCartBtn) openCartBtn.addEventListener('click', openCart);
@@ -28,7 +32,7 @@ if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
 if (continueShoppingBtn) continueShoppingBtn.addEventListener('click', closeCart);
 if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
 
-// Update Cart UI & Payment Links
+// Update Cart UI & UPI Payment Link
 function updateCartUI() {
   cartItemsContainer.innerHTML = '';
   let total = 0;
@@ -44,14 +48,14 @@ function updateCartUI() {
 
       const itemElement = document.createElement('div');
       itemElement.className = 'cart-item';
-      itemElement.style.cssText = 'display: flex; gap: 10px; margin-bottom: 15px; align-items: center;';
+      itemElement.style.cssText = 'display: flex; gap: 10px; margin-bottom: 12px; align-items: center; border-bottom: 1px dashed #eee; padding-bottom: 8px;';
       itemElement.innerHTML = `
-        <img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover;">
+        <img src="${item.image}" alt="${item.name}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 2px;">
         <div style="flex: 1;">
-          <h4 style="font-size: 12px; margin: 0;">${item.name}</h4>
+          <h4 style="font-size: 12px; margin: 0; font-weight: 600;">${item.name}</h4>
           <p style="font-size: 11px; color: var(--gray); margin: 2px 0;">₹${item.price} x ${item.quantity}</p>
         </div>
-        <button onclick="removeItem(${index})" style="background: none; border: none; color: red; cursor: pointer; font-size: 14px;">×</button>
+        <button onclick="removeItem(${index})" style="background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 16px; font-weight: bold;">×</button>
       `;
       cartItemsContainer.appendChild(itemElement);
     });
@@ -60,7 +64,7 @@ function updateCartUI() {
   cartTotalElement.innerText = `₹${total}`;
   cartCountElement.innerText = itemCount;
 
-  // FIX: Clean UPI Link (Resolves "This request type is not supported" error)
+  // Clean Standard UPI Deep Link (Resolves "This request type is not supported" Error)
   const upiID = "9589790094-2@ybl";
   const payeeName = "AYONIZA";
   
@@ -72,19 +76,45 @@ function updateCartUI() {
   }
 }
 
-// Remove Item
+// Remove Item from Cart
 window.removeItem = function(index) {
   cart.splice(index, 1);
   updateCartUI();
 };
 
-// Add to Cart Buttons
-document.querySelectorAll('.add-cart-btn').forEach(button => {
-  button.addEventListener('click', () => {
-    const id = button.getAttribute('data-id');
-    const name = button.getAttribute('data-name');
-    const price = parseInt(button.getAttribute('data-price'));
-    const image = button.getAttribute('data-image');
+// Category Filtering
+const categoryBtns = document.querySelectorAll('.category-btn');
+const productCards = document.querySelectorAll('.product-card');
+
+categoryBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    categoryBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const selectedCategory = btn.getAttribute('data-category');
+
+    productCards.forEach(card => {
+      const cardCategory = card.getAttribute('data-category');
+      if (selectedCategory === 'all' || cardCategory === selectedCategory) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Event Delegation for ADD TO CART & BUY NOW Buttons
+document.addEventListener('click', function(event) {
+  const target = event.target;
+
+  // Handle Add To Cart
+  if (target.classList.contains('add-cart-btn')) {
+    event.preventDefault();
+    const id = target.getAttribute('data-id');
+    const name = target.getAttribute('data-name');
+    const price = parseInt(target.getAttribute('data-price'));
+    const image = target.getAttribute('data-image');
 
     const existingItem = cart.find(item => item.id === id);
     if (existingItem) {
@@ -95,24 +125,23 @@ document.querySelectorAll('.add-cart-btn').forEach(button => {
 
     updateCartUI();
     openCart();
-  });
-});
+  }
 
-// Buy Now Buttons
-document.querySelectorAll('.buy-now-btn').forEach(button => {
-  button.addEventListener('click', () => {
-    const id = button.getAttribute('data-id');
-    const name = button.getAttribute('data-name');
-    const price = parseInt(button.getAttribute('data-price'));
-    const image = button.getAttribute('data-image');
+  // Handle Buy Now
+  if (target.classList.contains('buy-now-btn')) {
+    event.preventDefault();
+    const id = target.getAttribute('data-id');
+    const name = target.getAttribute('data-name');
+    const price = parseInt(target.getAttribute('data-price'));
+    const image = target.getAttribute('data-image');
 
     cart = [{ id, name, price, image, quantity: 1 }];
     updateCartUI();
     openCart();
-  });
+  }
 });
 
-// Place Order via WhatsApp
+// Checkout via WhatsApp
 if (checkoutBtn) {
   checkoutBtn.addEventListener('click', () => {
     const name = document.getElementById('custName').value.trim();
