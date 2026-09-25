@@ -171,3 +171,54 @@ document.addEventListener("keydown", e => {
 });
 
 renderCart();
+
+// Buy Now Button Click Handling
+document.querySelectorAll(".buy-now-btn").forEach(button => {
+  button.addEventListener("click", () => {
+    cart = [{
+      id: button.dataset.id,
+      name: button.dataset.name,
+      price: Number(button.dataset.price),
+      image: button.dataset.image,
+      quantity: 1
+    }];
+    saveCart();
+    renderCart();
+    openCart();
+  });
+});
+
+// WhatsApp Checkout with Customer Details
+document.getElementById("checkoutBtn").addEventListener("click", () => {
+  if (cart.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  const name = document.getElementById("custName").value.trim();
+  const phone = document.getElementById("custPhone").value.trim();
+  const address = document.getElementById("custAddress").value.trim();
+
+  if (!name || !phone || !address) {
+    alert("Kripya Name, Phone Number aur Address sahi se bharein!");
+    return;
+  }
+
+  const lines = cart.map((item, i) =>
+    `${i + 1}. ${item.name} x ${item.quantity} = ${money(item.price * item.quantity)}`
+  );
+
+  const message =
+    `*NEW ORDER - AYONIZA*%0A%0A` +
+    `*Customer Details:*%0A` +
+    `👤 Name: ${encodeURIComponent(name)}%0A` +
+    `📞 Phone: ${encodeURIComponent(phone)}%0A` +
+    `📍 Address: ${encodeURIComponent(address)}%0A%0A` +
+    `*Order Summary:*%0A` +
+    `${lines.join("%0A")}%0A%0A` +
+    `*Total Paid:* ${money(totalPrice())}%0A` +
+    `*Payment Mode:* UPI (9589790094-2@ybl)%0A%0A` +
+    `Maine UPI se payment kar di hai, kripya order confirm karein!`;
+
+  window.open(`https://wa.me/919203703177?text=${message}`, "_blank");
+});
