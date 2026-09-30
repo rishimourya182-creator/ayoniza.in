@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AYONIZA — Product Code Generator</title>
+<style>
+  :root {
+    --maroon: #7a2c45;
+    --cream: #faf5f2;
+    --text: #2b1c22;
+    --line: #e4d3d8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--cream);
+    color: var(--text);
+    padding: 32px 18px 80px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  .sub { opacity: .7; margin: 0 0 28px; font-size: 15px; }
+  .card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 22px;
+  }
+  label { display: block; font-size: 14px; margin: 14px 0 6px; font-weight: bold; }
+  label:first-child { margin-top: 0; }
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    background: var(--cream);
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  .row { display: flex; gap: 14px; }
+  .row > div { flex: 1; }
+  .hint { font-size: 12.5px; opacity: .6; margin-top: 4px; }
+  .out-label {
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 14px 0 6px;
+  }
+  .out-label span { font-weight: bold; font-size: 14px; }
+  button.copy {
+    background: var(--maroon); color: #fff; border: 0; border-radius: 6px;
+    padding: 6px 14px; font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  button.copy:active { opacity: .8; }
+  pre {
+    background: #23151b; color: #f3e6ea; padding: 14px; border-radius: 8px;
+    overflow-x: auto; font-size: 12.5px; line-height: 1.55; white-space: pre-wrap; word-break: break-word;
+  }
+  .filelist { background: var(--cream); border: 1px dashed var(--line); border-radius: 8px; padding: 12px 14px; font-size: 14px; }
+  .filelist code { background: #fff; padding: 1px 6px; border-radius: 4px; }
+  .note { font-size: 13.5px; line-height: 1.6; opacity: .85; }
+  .badge { display: inline-block; background: var(--maroon); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 999px; margin-left: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>AYONIZA — Naya Product Code Banayein</h1>
+  <p class="sub">Form bharein, neeche sahi code apne aap ban jayega. Bas usko copy karke GitHub par paste karna hai — koi comma/syntax ki galti nahi hogi.</p>
+
+  <div class="card">
+    <label>Product ka naam</label>
+    <input id="name" placeholder="jaise: Gold Infinity Hand Bracelet">
+
+    <div class="row">
+      <div>
+        <label>Category</label>
+        <select id="category">
+          <option value="earrings">Earrings</option>
+          <option value="bracelets">Bracelets</option>
+          <option value="sets">Jewellery Sets</option>
+          <option value="kamarbandh">Kamarbandh</option>
+          <option value="necklaces">Necklaces</option>
+          <option value="hathphool">Hathphool</option>
+          <option value="hair-accessories">Hair Accessories</option>
+          <option value="anklets">Anklets</option>
+          <option value="rings">Rings</option>
+        </select>
+      </div>
+      <div>
+        <label>Category label (card par jo dikhega)</label>
+        <input id="categoryLabel" placeholder="jaise: Hathphool">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Price (₹, jo customer dega)</label>
+        <input id="price" type="number" placeholder="299">
+      </div>
+      <div>
+        <label>Discount % (optional, khaali chhod sakte hain)</label>
+        <input id="discount" type="number" placeholder="20">
+      </div>
+    </div>
+
+    <label>Description (1 line)</label>
+    <textarea id="desc" placeholder="jaise: Minimal gold-tone hand chain with delicate pearls."></textarea>
+
+    <label>Main photo ka file naam (jo aap assets folder mein upload karengi)</label>
+    <input id="mainImg" placeholder="jaise: hathphool-infinity.png">
+    <p class="hint">Extension bhi likhein — .jpg, .jpeg ya .png. Naam mein space na rakhein.</p>
+
+    <div class="row">
+      <div>
+        <label>Extra slider photos kitni hain? (main ke alawa, max 4)</label>
+        <select id="extraCount">
+          <option value="0">0 — sirf ek hi photo</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3" selected>3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="out-label"><span>Step 1 — index.html mein paste karein</span><button class="copy" onclick="copyBox('htmlOut')">Copy</button></div>
+    <pre id="htmlOut">— upar form bharte hi yahan code aayega —</pre>
+
+    <div class="out-label"><span>Step 2 — products.js mein jodein</span><button class="copy" onclick="copyBox('jsOut')">Copy</button></div>
+    <pre id="jsOut">—</pre>
+
+    <div class="out-label"><span>Step 3 — assets folder mein exactly yeh naam se photos upload karein</span></div>
+    <div class="filelist" id="fileList">—</div>
+  </div>
+
+  <div class="card note">
+    <strong>Kaise use karein:</strong>
+    <ol>
+      <li>Upar form bharein. Neeche code aur photo-naam apne aap ban jayenge.</li>
+      <li><strong>Step 1</strong> ka code copy karke GitHub par <code>index.html</code> mein, aakhri product card ke baad paste karein.</li>
+      <li><strong>Step 2</strong> ka code copy karke <code>products.js</code> mein, aakhri line ke <em>end mein comma lagakar</em>, uske neeche paste karein (file ke sabse end wale <code>};</code> se pehle).</li>
+      <li><strong>Step 3</strong> mein jo naam dikhein, unhi naam se apni photos <code>assets</code> folder mein upload karein.</li>
+      <li>GitHub par Commit changes dabayein aur site par Ctrl+F5 dabakar check karein.</li>
+    </ol>
+    <p>Yeh tool aapke computer mein hi chalta hai, kahin upload nahi hota, isliye ise apne paas save kar lein aur jab bhi naya product jodna ho, isko dobara kholkar use karein.<span class="badge">100% Free</span></p>
+  </div>
+</div>
+
+<script>
+  function slugify(s) {
+    return s.toLowerCase().trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+  }
+  function esc(s) {
+    var d = document.createElement("div");
+    d.textContent = s || "";
+    return d.innerHTML;
+  }
+  function fileBase(name) {
+    var i = name.lastIndexOf(".");
+    return i > -1 ? name.slice(0, i) : name;
+  }
+  function fileExt(name) {
+    var i = name.lastIndexOf(".");
+    return i > -1 ? name.slice(i) : ".jpg";
+  }
+
+  function generate() {
+    var name = document.getElementById("name").value.trim();
+    var category = document.getElementById("category").value;
+    var categoryLabel = document.getElementById("categoryLabel").value.trim();
+    var price = document.getElementById("price").value.trim();
+    var discount = document.getElementById("discount").value.trim();
+    var desc = document.getElementById("desc").value.trim();
+    var mainImg = document.getElementById("mainImg").value.trim();
+    var extraCount = parseInt(document.getElementById("extraCount").value, 10);
+
+    if (!name || !price || !mainImg) {
+      document.getElementById("htmlOut").textContent = "— pehle Product naam, Price aur Main photo ka naam bharein —";
+      document.getElementById("jsOut").textContent = "—";
+      document.getElementById("fileList").textContent = "—";
+      return;
+    }
+
+    var id = slugify(name);
+    var imgPath = "assets/" + mainImg;
+    var discountAttr = discount ? ' data-discount="' + esc(discount) + '"' : "";
+    var catLabel = categoryLabel || (category.charAt(0).toUpperCase() + category.slice(1));
+
+    var html =
+'<article class="product-card" data-category="' + esc(category) + '"' + discountAttr + '>\n' +
+'  <div class="product-image"><img src="' + esc(imgPath) + '" alt="' + esc(name) + '" loading="lazy"></div>\n' +
+'  <div class="product-info">\n' +
+'    <p class="product-category">' + esc(catLabel) + '</p>\n' +
+'    <h3>' + esc(name) + '</h3>\n' +
+'    <p class="product-description">' + esc(desc) + '</p>\n' +
+'    <div class="product-bottom">\n' +
+'      <span class="product-price" data-price="' + esc(price) + '">₹' + esc(price) + '</span>\n' +
+'      <div class="product-actions">\n' +
+'        <button class="add-cart-btn" data-id="' + esc(id) + '" data-name="' + esc(name) + '" data-price="' + esc(price) + '" data-image="' + esc(imgPath) + '">Add to Cart</button>\n' +
+'        <button class="product-button buy-now-btn" data-id="' + esc(id) + '" data-name="' + esc(name) + '" data-price="' + esc(price) + '" data-image="' + esc(imgPath) + '">Buy Now</button>\n' +
+'      </div>\n' +
+'    </div>\n' +
+'  </div>\n' +
+'</article>';
+
+    document.getElementById("htmlOut").textContent = html;
+
+    var base = fileBase(mainImg), ext = fileExt(mainImg);
+    var extraNames = [];
+    for (var i = 2; i <= extraCount + 1; i++) extraNames.push("assets/" + base + "-" + i + ext);
+
+    var jsLine = '"' + id + '": [' + extraNames.map(function (n) { return '"' + n + '"'; }).join(", ") + ']';
+    document.getElementById("jsOut").textContent =
+      extraCount > 0
+        ? jsLine + "\n\n// Yaad rakhein: is line ke UPAR wali (pichli) entry ke end mein comma lagayein,\n// aur is line ke baad agar aur entries hain to is line ke end mein bhi comma lagayein."
+        : "// Is product ki koi extra slider image nahi, isliye products.js mein kuch jodne ki zaroorat nahi.";
+
+    var files = ['<code>' + esc(mainImg) + '</code> (main photo)'];
+    extraNames.forEach(function (n) { files.push('<code>' + esc(n.replace("assets/", "")) + '</code>'); });
+    document.getElementById("fileList").innerHTML = files.join(", ");
+  }
+
+  function copyBox(id) {
+    var text = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      var btn = event.target;
+      var old = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(function () { btn.textContent = old; }, 1200);
+    });
+  }
+
+  document.querySelectorAll("input, select, textarea").forEach(function (el) {
+    el.addEventListener("input", generate);
+    el.addEventListener("change", generate);
+  });
+</script>
+</body>
+</html>
